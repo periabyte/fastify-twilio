@@ -88,9 +88,9 @@ function makeCall(request, response) {
   // The recipient of the call, a phone number or a client
   let to = null;
   if (request.method == 'POST') {
-    to = request.body.to;
+    to = request.body.to || request.body.To;
   } else {
-    to = request.query.to;
+    to = request.query.to || request.query.To;
   }
   console.log('to', to)
   const voiceResponse = new VoiceResponse();
@@ -98,7 +98,7 @@ function makeCall(request, response) {
   if (!to) {
       voiceResponse.say("Congratulations! You have made your first call! Good bye.");
   } else if (isNumber(to)) {
-      const dial = voiceResponse.dial({callerId : request.body.from });
+      const dial = voiceResponse.dial({callerId : request.body.from || request.body.From });
       dial.number(to);
   } else {
       const dial = voiceResponse.dial({callerId : callerId});

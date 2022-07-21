@@ -1,4 +1,4 @@
-require("dotenv")().config();
+require("dotenv").config();
 const fastify = require('fastify')({
     logger: true
 });
@@ -7,7 +7,7 @@ const { VoiceResponse } = twilio.twiml;
 const { AccessToken } = twilio.jwt;
 const { VoiceGrant } = AccessToken;
 
-const { ACCOUNT_SID, APP_SID, AUTH_TOKEN, TOKEN_SID, TOKEN_SECRET } = process.env;
+const { PORT, ACCOUNT_SID, APP_SID, AUTH_TOKEN, TOKEN_SID, TOKEN_SECRET } = process.env;
 // fastify body parser
 fastify.register(require('@fastify/formbody'))
 

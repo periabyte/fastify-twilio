@@ -7,7 +7,7 @@ const { VoiceResponse } = twilio.twiml;
 const { AccessToken } = twilio.jwt;
 const { VoiceGrant } = AccessToken;
 
-const { PORT, ACCOUNT_SID, APP_SID, AUTH_TOKEN, TOKEN_SID, TOKEN_SECRET } = process.env;
+const { PORT, ACCOUNT_SID, APP_SID, AUTH_TOKEN, TOKEN_SID, TOKEN_SECRET, HOST_NAME } = process.env;
 // fastify body parser
 fastify.register(require('@fastify/formbody'))
 
@@ -74,7 +74,7 @@ const placeCall = async (req, res) => {
     const client = twilio(ACCOUNT_SID, AUTH_TOKEN);
     
     const call = await client.calls.create({
-        url:  '/makeCall',
+        url:  `${HOST_NAME}/makeCall`,
         to,
         from,
     })
@@ -104,13 +104,9 @@ function makeCall(request, response) {
       const dial = voiceResponse.dial({callerId : callerId});
       dial.client(to);
   }
-    
-
 
   console.log('Response:' + voiceResponse.toString());
   return response.send(voiceResponse.toString());
-
-
 }
 
 fastify.get('/makeCall', makeCall);

@@ -131,7 +131,7 @@ fastify.get('/', async (request, reply) => {
  */
 const start = async () => {
   try {
-    await fastify.listen({ port: PORT })
+    await fastify.listen({ port: process.env.PORT || "3000", host: process.env.HOST || '0.0.0.0' })
   } catch (err) {
       console.log('err', err);
     process.exit(1)

@@ -71,16 +71,21 @@ const placeCall = async (req, res) => {
         to,
         from
     } = req.body;
-    const client = twilio(ACCOUNT_SID, AUTH_TOKEN);
+    // const client = twilio(ACCOUNT_SID, AUTH_TOKEN);
     
-    const call = await client.calls.create({
-        url:  `${HOST_NAME}/makeCall`,
-        to,
-        from,
-    })
+    // const call = await client..conferences.create({
+    //   url: `${HOST_NAME}/makeCall`,
+    //   to,
+    //   from,
+    // });
+  
+  const voiceResponse = new VoiceResponse();
+  
+  const dial = voiceResponse.dial({ callerId: callerId });
+  
+  dial.conference(`${to}-${from}`);
 
-
-    res.send(call.sid);
+    res.send(call.toString());
 };
 
 function makeCall(request, response) {
@@ -95,6 +100,8 @@ function makeCall(request, response) {
   console.log('to', to)
   const voiceResponse = new VoiceResponse();
 
+  
+
   if (!to) {
       voiceResponse.say("Congratulations! You have made your first call! Good bye.");
   } else if (isNumber(to)) {
@@ -108,6 +115,8 @@ function makeCall(request, response) {
   console.log('Response:' + voiceResponse.toString());
   return response.send(voiceResponse.toString());
 }
+
+// make voice conference endpoint
 
 fastify.get('/makeCall', makeCall);
 

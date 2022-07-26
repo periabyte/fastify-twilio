@@ -85,7 +85,7 @@ const placeCall = async (req, res) => {
   
   dial.conference(`${to}-${from}`);
 
-  res.send(call.toString());
+  res.send(dial.toString());
 };
 
 function makeCall(request, response) {

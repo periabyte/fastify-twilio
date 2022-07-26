@@ -71,20 +71,15 @@ const placeCall = async (req, res) => {
         to,
         from
     } = req.body;
-    // const client = twilio(ACCOUNT_SID, AUTH_TOKEN);
+    const client = twilio(ACCOUNT_SID, AUTH_TOKEN);
     
-    // const call = await client..conferences.create({
-    //   url: `${HOST_NAME}/makeCall`,
-    //   to,
-    //   from,
-    // });
-  
-  const twiml = new VoiceResponse();
-  const dial = twiml.dial();
-  dial.conference(`to-${to}-from-${from}`);
-  console.log('conf', dial, twiml.toString());
-  res.send(twiml.toString());
-    // res.send(call.sid);
+    const call = await client.calls.create({
+        url:  `${HOST_NAME}/incoming`,
+        to,
+        from,
+    })
+
+    res.send(call.sid);
 };
 
 function makeCall(request, response) {
@@ -132,6 +127,13 @@ fastify.get('/', async (request, reply) => {
     message: 'Hello World!'
   });
 });
+
+fastify.get('/incoming', async (request, reply) => {
+  const voiceResponse = new VoiceResponse();
+  voiceResponse.say("Congratulations! You have received your first inbound call! Good bye.");
+  console.log('Response:' + voiceResponse.toString());
+  return response.send(voiceResponse.toString());
+})
 /**
  * Run the server!
  */

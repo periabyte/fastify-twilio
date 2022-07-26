@@ -81,11 +81,11 @@ const placeCall = async (req, res) => {
   
   const voiceResponse = new VoiceResponse();
   
-  const dial = voiceResponse.dial({ callerId: callerId });
+  const dial = voiceResponse.dial({ callerId: from }, to);
   
   dial.conference(`${to}-${from}`);
 
-    res.send(call.toString());
+  res.send(call.toString());
 };
 
 function makeCall(request, response) {

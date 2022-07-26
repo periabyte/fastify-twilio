@@ -79,13 +79,12 @@ const placeCall = async (req, res) => {
     //   from,
     // });
   
-  const voiceResponse = new VoiceResponse();
-  
-  const dial = voiceResponse.dial({ callerId: from }, to);
-  
-  dial.conference(`${to}-${from}`);
-
-  res.send(dial.toString());
+  const twiml = new VoiceResponse();
+  const dial = twiml.dial();
+  dial.conference(`to-${to}-from-${from}`);
+  console.log('conf', dial, twiml.toString());
+  res.send(twiml.toString());
+    // res.send(call.sid);
 };
 
 function makeCall(request, response) {
@@ -105,8 +104,10 @@ function makeCall(request, response) {
   if (!to) {
       voiceResponse.say("Congratulations! You have made your first call! Good bye.");
   } else if (isNumber(to)) {
-      const dial = voiceResponse.dial({callerId : request.body.from || request.body.From });
-      dial.number(to);
+      const dial = voiceResponse.connect();
+    
+    // voiceResponse.connect().room(`room-${to}-${request.body.from || request.query.from}`);
+    dial.conference(to);  
   } else {
       const dial = voiceResponse.dial({callerId : callerId});
       dial.client(to);

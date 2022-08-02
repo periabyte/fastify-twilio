@@ -112,10 +112,11 @@ function makeCall(request, response) {
   return response.send(voiceResponse.toString());
 }
 
-const incoming = async (request, reply) => {
+const incoming = async (request, response) => {
   const voiceResponse = new VoiceResponse();
   voiceResponse.say("Congratulations! You have received your first inbound call! Good bye.");
   console.log('Response:' + voiceResponse.toString());
+  console.log(request.body);
   return response.send(voiceResponse.toString());
 }
 

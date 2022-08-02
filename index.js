@@ -3,9 +3,10 @@ const fastify = require('fastify')({
     logger: true
 });
 const twilio = require('twilio');
+const { VideoGrant } = require("twilio/lib/jwt/AccessToken");
 const { VoiceResponse } = twilio.twiml;
 const { AccessToken } = twilio.jwt;
-const { VoiceGrant } = AccessToken;
+const { VoiceGrant, VideoGrant } = AccessToken;
 
 const { PORT, ACCOUNT_SID, APP_SID, AUTH_TOKEN, TOKEN_SID, TOKEN_SECRET, HOST_NAME } = process.env;
 // fastify body parser
@@ -33,20 +34,18 @@ function isNumber(to) {
   return false;
 }
 const getToken = async (req, res) => {
-  const { phoneNumber } = req.body;
+  const { room, user } = req.body;
 
-  const voiceGrant = new VoiceGrant({
-    outgoingApplicationSid: APP_SID,
-  });
+  const videoGrant = new VideoGrant({ room });
 
   const token = new AccessToken(
     ACCOUNT_SID,
     TOKEN_SID,
-    TOKEN_SECRET, {
-    identity: phoneNumber
-  }
+    TOKEN_SECRET,
+    { identity: user }
   );
-  token.addGrant(voiceGrant);
+
+  token.addGrant(videoGrant);
 
   res.send(token.toJwt());
 };
@@ -114,6 +113,7 @@ function makeCall(request, response) {
 
 const incoming = async (request, response) => {
   const voiceResponse = new VoiceResponse();
+  voiceResponse.connect().room(`room-${request.body.From || request.query.From}`);
   voiceResponse.say("Congratulations! You have received your first inbound call! Good bye.");
   console.log('Response:' + voiceResponse.toString());
   console.log(request.body);

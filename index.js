@@ -112,6 +112,13 @@ function makeCall(request, response) {
   return response.send(voiceResponse.toString());
 }
 
+const incoming = async (request, reply) => {
+  const voiceResponse = new VoiceResponse();
+  voiceResponse.say("Congratulations! You have received your first inbound call! Good bye.");
+  console.log('Response:' + voiceResponse.toString());
+  return response.send(voiceResponse.toString());
+}
+
 // make voice conference endpoint
 
 fastify.get('/makeCall', makeCall);
@@ -128,12 +135,8 @@ fastify.get('/', async (request, reply) => {
   });
 });
 
-fastify.get('/incoming', async (request, reply) => {
-  const voiceResponse = new VoiceResponse();
-  voiceResponse.say("Congratulations! You have received your first inbound call! Good bye.");
-  console.log('Response:' + voiceResponse.toString());
-  return response.send(voiceResponse.toString());
-})
+fastify.get('/incoming', incoming)
+fastify.post('/incoming', incoming)
 /**
  * Run the server!
  */

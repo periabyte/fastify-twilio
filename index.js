@@ -3,7 +3,6 @@ const fastify = require('fastify')({
     logger: true
 });
 const twilio = require('twilio');
-const { VideoGrant } = require("twilio/lib/jwt/AccessToken");
 const { VoiceResponse } = twilio.twiml;
 const { AccessToken } = twilio.jwt;
 const { VoiceGrant, VideoGrant } = AccessToken;
